@@ -75,8 +75,9 @@ endif
 "     'javascript.jsx',
 "     'javascriptreact',
 "     'javascript.tsx',
+"   ],
+"   'typescript': [
 "     'typescriptreact',
-"     'typescript',
 "   ],
 "   'java': ['groovy'],
 " })
@@ -97,8 +98,9 @@ let g:doge_filetype_aliases = doge#helpers#deepextend({
 \    'javascript.jsx',
 \    'javascriptreact',
 \    'javascript.tsx',
+\  ],
+\  'typescript': [
 \    'typescriptreact',
-\    'typescript',
 \  ],
 \  'java': ['groovy'],
 \}, get(g:, 'doge_filetype_aliases', {}), 1)
