@@ -100,7 +100,9 @@ let g:doge_filetype_aliases = doge#helpers#deepextend({
 \    'javascript.tsx',
 \  ],
 \  'typescript': [
+\    'typescript',
 \    'typescriptreact',
+\    'typescript.tsx',
 \  ],
 \  'java': ['groovy'],
 \}, get(g:, 'doge_filetype_aliases', {}), 1)

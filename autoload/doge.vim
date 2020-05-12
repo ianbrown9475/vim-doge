@@ -7,6 +7,10 @@ set cpoptions&vim
 "
 " arg: Either a count (0 by default) or a string (empty by default).
 function! doge#generate(arg) abort
+  if doge#buffer#initialized() == v:false
+    return 0
+  endif
+
   " Immediately validate if the doc standard is allowed.
   if index(b:doge_supported_doc_standards, b:doge_doc_standard) < 0
     echoerr printf(
@@ -140,10 +144,26 @@ function! doge#on_filetype_change() abort
     \ && exists('b:doge_supported_doc_standards')
     \ && get(b:, 'doge_prev_ft', '') != &filetype
     " Remove all the doc standards from the previous filetype.
+    " If the current filetype is not an alias of the previous filetype then we
+    " will remove the doc standard.
     for l:doc in get(b:, 'doge_prev_supported_doc_standards', [])
-      " If the current filetype is not an alias of the previous filetype then we
-      " will remove the doc standard.
-      if index(get(g:doge_filetype_aliases, &filetype, []), b:doge_prev_ft) < 0
+      let l:is_alias = 0
+
+      if (has_key(g:doge_filetype_aliases, &filetype) && index(get(g:doge_filetype_aliases, &filetype, []), b:doge_prev_ft) >= 0)
+            \ || (has_key(g:doge_filetype_aliases, b:doge_prev_ft) && index(get(g:doge_filetype_aliases, b:doge_prev_ft, []), &filetype) >= 0)
+        let l:is_alias = 1
+      endif
+
+      if l:is_alias == v:false
+        for [l:ft, l:aliases] in items(get(g:, 'doge_filetype_aliases'))
+          if index(l:aliases, &filetype) >= 0 && index(l:aliases, b:doge_prev_ft) >= 0
+            let l:is_alias = 1
+            break
+          endif
+        endfor
+      endif
+
+      if l:is_alias == v:false
         let l:doc_idx = index(get(b:, 'doge_supported_doc_standards', []), l:doc)
         if l:doc_idx >= 0
           call remove(b:doge_supported_doc_standards, l:doc_idx)

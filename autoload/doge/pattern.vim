@@ -26,7 +26,9 @@ function! doge#pattern#generate(pattern) abort
     endif
   else
     " Skip if the current line does not match the main pattern.
-    let l:curr_line_raw = escape(doge#helpers#trim(join(l:lines, ' ')), '\')
+    let l:glue = has_key(a:pattern, 'normalize')
+          \ && a:pattern['normalize'] == v:false ? "\n" : ' '
+    let l:curr_line_raw = escape(doge#helpers#trim(join(l:lines, l:glue)), '\')
     if l:curr_line_raw !~# a:pattern['match']
       return 0
     endif
@@ -49,7 +51,7 @@ function! doge#pattern#generate(pattern) abort
   endif
 
   try
-    let l:preprocess_fn = printf('doge#preprocessors#%s#tokens', &filetype)
+    let l:preprocess_fn = printf('doge#preprocessors#%s#tokens', doge#helpers#get_filetype())
     call function(l:preprocess_fn)(l:tokens)
   catch /^Vim\%((\a\+)\)\=:E117/
   endtry
@@ -71,10 +73,16 @@ function! doge#pattern#generate(pattern) abort
 
     " Preprocess the extracted parameter tokens.
     try
-      let l:preprocess_fn = printf('doge#preprocessors#%s#parameter_tokens', &filetype)
+      let l:preprocess_fn = printf('doge#preprocessors#%s#parameter_tokens', doge#helpers#get_filetype())
       call function(l:preprocess_fn)(l:param_tokens)
     catch /^Vim\%((\a\+)\)\=:E117/
     endtry
+
+    " Some values may contain pipe characters as input. This will happen in
+    " typed languages where the type hint allows multiple types.
+    " JavaScript/TypeScript Example: function test($p1: string, p2: Foo | Bar | Baz) { ... }
+    " Therefore, we have to escape the pipe characters in the input.
+    let l:param_tokens = doge#helpers#deepsubstitute(l:param_tokens, '\m|', '<Bar>', 'g')
 
     for l:param_token in l:param_tokens
       let l:format = doge#token#replace(
@@ -119,7 +127,7 @@ function! doge#pattern#generate(pattern) abort
   endif
 
   try
-    let l:preprocess_fn = printf('doge#preprocessors#%s#insert_position', &filetype)
+    let l:preprocess_fn = printf('doge#preprocessors#%s#insert_position', doge#helpers#get_filetype())
     let l:preprocessed_insert_position = function(l:preprocess_fn)(l:comment_lnum_insert_position)
     let l:comment_lnum_insert_position = l:preprocessed_insert_position
 

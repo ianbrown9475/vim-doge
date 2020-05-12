@@ -5,6 +5,7 @@ doge#activate()	doge.txt	/*doge#activate()*
 doge#buffer#get_doc_standard()	doge.txt	/*doge#buffer#get_doc_standard()*
 doge#buffer#get_patterns()	doge.txt	/*doge#buffer#get_patterns()*
 doge#buffer#get_supported_doc_standards()	doge.txt	/*doge#buffer#get_supported_doc_standards()*
+doge#buffer#initialized()	doge.txt	/*doge#buffer#initialized()*
 doge#buffer#register_doc_standard()	doge.txt	/*doge#buffer#register_doc_standard()*
 doge#command_complete()	doge.txt	/*doge#command_complete()*
 doge#comment#deactivate_when_done()	doge.txt	/*doge#comment#deactivate_when_done()*
@@ -14,7 +15,9 @@ doge#deactivate()	doge.txt	/*doge#deactivate()*
 doge#generate()	doge.txt	/*doge#generate()*
 doge#helpers#count()	doge.txt	/*doge#helpers#count()*
 doge#helpers#deepextend()	doge.txt	/*doge#helpers#deepextend()*
+doge#helpers#deepsubstitute()	doge.txt	/*doge#helpers#deepsubstitute()*
 doge#helpers#generator()	doge.txt	/*doge#helpers#generator()*
+doge#helpers#get_filetype()	doge.txt	/*doge#helpers#get_filetype()*
 doge#helpers#keyseq()	doge.txt	/*doge#helpers#keyseq()*
 doge#helpers#placeholder()	doge.txt	/*doge#helpers#placeholder()*
 doge#helpers#trim()	doge.txt	/*doge#helpers#trim()*
